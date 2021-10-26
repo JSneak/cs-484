@@ -49,14 +49,42 @@
 //         );
 //     }
 // }
+import Axios from 'axios';
 
+//Add state for FName
 export default function Dashboard(){
+    //config
+    Axios.defaults.withCredentials = true;
+
+    const [firstName, setFirstName] = React.useState(null);
+    
+    //Get user data from nodeJS backend
+    const getUser = () => {
+        Axios.get('http://localhost:3001/user')
+        .then((response) =>{
+            if(response.data.first_name)
+                setFirstName(response.data.first_name);
+        })
+    };
+
+    //Logout of session using NodeJS
+    const logout = () => {
+        Axios.get('http://localhost:3001/logout')
+        .then((response) => {
+            setFirstName(null);
+        })
+    }
+
+    React.useEffect( () => {
+        getUser;
+    }, []);
+        
     return (
         <div>
-            {this.state.fName ? 
+            {firstName ? 
             <div>
-                Welcome {this.state.fName}!
-                <button onClick={}>Logout</button>
+                Welcome {firstName}!
+                <button onClick={logout}>Logout</button>
             </div> :
             <div>Not Logged In</div>
             }
