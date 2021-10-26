@@ -52,7 +52,7 @@
 import Axios from 'axios';
 
 //Add state for FName
-export default function Dashboard(){
+const Dashboard = () => {
     //config
     Axios.defaults.withCredentials = true;
 
@@ -91,3 +91,5 @@ export default function Dashboard(){
         </div>
     );
 }
+
+export default Dashboard
