@@ -88,20 +88,71 @@
 //     }
 // }
 
+import Axios from 'axios';
 
-export default function LogIn(){
+const Login = () =>{
+
+    const [emailLogin, setEmailLogin] = React.useState("");
+    const [passwordLogin, setPasswordLogin] = React.useState("");
+    const [errorMsg, setErrorMsg] = React.useState(null);
+    const [loggedIn, setLoggedIn] = React.useState(false);
+
+    const login = () => {
+        Axios.post('http://localhost:3001/login', {
+            email: emailLogin, 
+            password: passwordLogin})
+            .then((response) =>{
+                if(response.data.message !== 'No User Exists'){
+                    //this.setState({loggedIn: true});
+                    setLoggedIn(true);
+                }
+                else{
+                    //this.setState({errorMsg: "Invalid email or password"});
+                    setErrorMsg("Invalid email or password");
+                }
+            }
+
+        );
+    };
+    
+    const getUser = () => {
+        Axios.get('http://localhost:3001/user')
+        .then((response) =>{
+            if(response.data.message !== "No authenticated User"){
+                // this.setState({loggedIn: true});
+                setLoggedIn(true);
+            }
+            else{
+                // this.setState({loggedIn: false});
+                setLoggedIn(false);
+            }
+        })
+    };
+
+    React.useEffect( () => {
+        getUser;
+    }, []);
+
+    //TODO if logged in, redirect to dashboard
+    if(loggedIn){
+
+    }
+
+    //else need to log in
     return (
         <div>
             <h3>Sign In</h3>
-            {this.state.errorMsg ? <div>{this.state.errorMsg}</div> : <div></div>}
+            {errorMsg ? <div>{errorMsg}</div> : <div></div>}
             <div className="form-group">
                 <label>Email address</label>
-                <input type="email" className="form-control" placeholder="Enter email" onChange={(e) => {}}/>
+                <input type="email" className="form-control" placeholder="Enter email" 
+                onChange={(e) => {setEmailLogin(e.target.value)}}/>
             </div>
 
             <div className="form-group">
                 <label>Password</label>
-                <input type="password" className="form-control" placeholder="Enter password" onChange={(e) => {}}/>
+                <input type="password" className="form-control" placeholder="Enter password" 
+                onChange={(e) => {setPasswordLogin(e.target.value)}}/>
             </div>
 
             <div className="form-group">
@@ -111,7 +162,7 @@ export default function LogIn(){
                 </div>
             </div>
 
-            <button className="btn btn-primary btn-block" onClick={}>Submit</button>
+            <button className="btn btn-primary btn-block" onClick={login}>Submit</button>
 
             <p className="forgot-password text-right">
                 Forgot <a href="#">password?</a>
@@ -119,3 +170,5 @@ export default function LogIn(){
         </div>
     );
 }
+
+export default Login;
